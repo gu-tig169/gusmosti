@@ -1,7 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:todoApp/FilterView.dart';
+import 'package:todoApp/SecondView.dart';
+import 'package:provider/provider.dart';
+import 'model.dart';
+import 'ToDoList.dart';
 
 void main() {
-  runApp(MyApp());
+  var state = MyState();
+
+  runApp(ChangeNotifierProvider(
+    create: (context) => state,
+    child: MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -13,135 +23,74 @@ class MyApp extends StatelessWidget {
   }
 }
 
+//nytt
 class MainView extends StatelessWidget {
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.grey,
-        title: Text(
-          'TIG169 TODO',
-          style: TextStyle(color: Colors.black, fontSize: 26),
-        ),
-        actions: [
-          IconButton(
-            icon: Icon(
-              Icons.more_vert,
-              color: Colors.black,
-            ),
-            onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => SecondView()));
-            },
-          ),
+        backgroundColor: (Colors.grey),
+        title: Text('TIG169 TODO',
+            style: TextStyle(color: Colors.black, fontSize: 26)),
+        actions: <Widget>[
+          _filterView(),
         ],
-      ),
-      body: _list(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: Icon(Icons.add, size: 56),
-        backgroundColor: Colors.grey,
-      ),
-    );
-  }
-
-  Widget _list() {
-    var todos = [
-      'Plugga',
-      'Städa',
-      'Laga mat',
-      'Träna',
-      'Handla',
-      'Test1',
-      'Test2',
-    ];
-
-    var list = List.generate(1000, (index) => '${todos[index % 7]}');
-
-    return ListView.builder(
-      itemBuilder: (context, index) => _item(list[index]),
-      itemCount: 7,
-    );
-  }
-
-  Widget _item(text) {
-    return CheckboxListTile(
-      title: Text(text,
-          style: TextStyle(
-            fontSize: 26,
-          )),
-      secondary: Icon(Icons.cancel),
-      value: false,
-      onChanged: (val) {},
-      controlAffinity: ListTileControlAffinity.leading,
-    );
-  }
-}
-
-class SecondView extends StatelessWidget {
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.grey,
-        title: Text(
-          'TIG169 TODO',
-          style: TextStyle(color: Colors.black, fontSize: 26),
-        ),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              height: 24,
-            ),
-            _nameInputField(),
-            Container(
-              height: 40,
-            ),
-            _iconRow(),
-          ],
-        ),
+        child: _list(context),
       ),
+      floatingActionButton: _fab(context),
     );
   }
-}
 
-Widget _nameInputField() {
-  return Container(
-    margin: EdgeInsets.only(left: 16, top: 40),
-    child: TextField(
-      decoration: InputDecoration(hintText: 'What are you going to do?'),
-    ),
-  );
-}
+  Widget _list(context) {
+    var filter = Provider.of<MyState>(context, listen: false).filterSetting;
 
-Widget _iconRow() {
-  return Row(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-      Container(
-        child: Icon(Icons.add),
+    if (filter == "All") {
+      return AllTasksTab();
+    }
+
+    if (filter == "Done") {
+      return CompletedTasksTab();
+    }
+
+    if (filter == "Undone") {
+      return IncompleteTasksTab();
+    }
+  }
+
+  Widget _fab(context) {
+    return FloatingActionButton(
+      child: Icon(Icons.add, size: 56),
+      backgroundColor: Colors.grey,
+      onPressed: () {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => SecondView()));
+      },
+    );
+  }
+
+  Widget _filterView() {
+    return PopupMenuButton<String>(
+      icon: Icon(
+        Icons.more_vert,
+        size: 30.0,
+        color: Colors.black54,
       ),
-      Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Text('ADD', style: TextStyle(fontSize: 16)),
-        ],
-      ),
-    ],
-  );
-}
-
-Widget _buttonAdd() {
-  return RaisedButton(
-    onPressed: () {},
-    color: Colors.white,
-    // text: Text('+ ADD'),
-    // child: Row(
-    //  children: [
-    //    Container(
-    //      padding: EdgeInsets.only(left: 16, top: 40), child: Icon(Icons.add))
-  );
+      color: Colors.white,
+      itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+        PopupMenuItem<String>(
+          value: "1",
+          child: Text("All"),
+        ),
+        PopupMenuItem<String>(
+          value: "2",
+          child: Text("Done"),
+        ),
+        PopupMenuItem<String>(
+          value: "3",
+          child: Text("Undone"),
+        )
+      ],
+    );
+  }
 }
