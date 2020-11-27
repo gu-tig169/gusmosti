@@ -25,9 +25,9 @@ class _ToDoListState extends State<ToDoList> {
     index,
   ) {
     return ListTile(
-        title: Text(task.text, style: TextStyle(fontSize: 20)),
+        title: Text(task.title, style: TextStyle(fontSize: 20)),
         leading: Checkbox(
-          value: task.completed,
+          value: task.done,
           onChanged: (bool checked) {
             Provider.of<MyState>(context, listen: false).changeState(task);
           },

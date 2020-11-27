@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 
 class SecondView extends StatelessWidget {
   Widget build(context) {
-    var controller = TextEditingController(text: '');
+    var controller = TextEditingController();
 
     return StatefulBuilder(
         builder: (context, setState) => Scaffold(
@@ -35,8 +35,9 @@ class SecondView extends StatelessWidget {
                     color: (Colors.white),
                     child: Text('+ Add'),
                     onPressed: () {
+                      var task = Task(title: controller.text);
                       Provider.of<MyState>(context, listen: false)
-                          .addItem(controller.text);
+                          .addItem(task);
                       Navigator.pop(context);
                     }),
               ],
