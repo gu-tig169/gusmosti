@@ -14,12 +14,12 @@ class _ToDoListState extends State<ToDoList> {
   Widget build(BuildContext context) {
     return ListView.builder(
       itemBuilder: (context, index) =>
-          _item(context, widget.list[index], index),
+          _todoItem(context, widget.list[index], index),
       itemCount: widget.list.length,
     );
   }
 
-  Widget _item(
+  Widget _todoItem(
     context,
     Task task,
     index,
@@ -27,14 +27,15 @@ class _ToDoListState extends State<ToDoList> {
     return ListTile(
         title: Text(task.title, style: TextStyle(fontSize: 20)),
         leading: Checkbox(
-          value: task.done,
+          value: task.completed,
           onChanged: (bool checked) {
-            Provider.of<MyState>(context, listen: false).changeState(task);
+            Provider.of<MyState>(context, listen: false)
+                .setCheckbox(task, checked);
           },
         ),
         trailing: IconButton(
           onPressed: () {
-            Provider.of<MyState>(context, listen: false).removeItem(index);
+            Provider.of<MyState>(context, listen: false).removeItem(task);
           },
           icon: Icon(Icons.cancel),
         ));
