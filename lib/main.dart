@@ -27,8 +27,6 @@ class MyApp extends StatelessWidget {
 // ignore: must_be_immutable
 class MainView extends StatelessWidget {
   Widget build(BuildContext context) {
-    // _getTodos(); hur får denna att returnera lista, kan den ligga här?
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: (Colors.grey),

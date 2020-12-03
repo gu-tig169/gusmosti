@@ -4,27 +4,27 @@ import 'package:todoApp/API.dart';
 
 class Task {
   String title;
-  bool done;
+  bool completed;
   String id;
 
   Task({
     this.title,
-    this.done = false,
+    this.completed = false,
     this.id,
   });
 
   void toggleCompleted() {
-    if (done == true) {
-      done = false;
+    if (completed == true) {
+      completed = false;
     } else {
-      done = true;
+      completed = true;
     }
   }
 
   static Map<String, dynamic> toJson(Task task) {
     return {
       'title': task.title,
-      'done': task.done,
+      'done': task.completed,
       'id': task.id,
     };
   }
@@ -33,7 +33,7 @@ class Task {
     return Task(
       id: json['id'],
       title: json['title'],
-      done: json['done'],
+      completed: json['done'],
     );
   }
 }
@@ -47,15 +47,11 @@ class MyState extends ChangeNotifier {
 
   String get filterBy => _filterBy;
 
-  /*UnmodifiableListView<Task> get filteredTasks {
-    if (_filterBy == 'All') return allTasks;
-  }*/
-
   UnmodifiableListView<Task> get allTasks => UnmodifiableListView(_list);
   UnmodifiableListView<Task> get incompleteTasks =>
-      UnmodifiableListView(_list.where((task) => !task.done));
+      UnmodifiableListView(_list.where((task) => !task.completed));
   UnmodifiableListView<Task> get completedTasks =>
-      UnmodifiableListView(_list.where((task) => task.done));
+      UnmodifiableListView(_list.where((task) => task.completed));
 
   Future getTodos() async {
     List<Task> list = await API.getTodos();
@@ -74,10 +70,10 @@ class MyState extends ChangeNotifier {
     await getTodos();
   }
 
-  void changeState(Task task) {
-    final taskIndex = _list.indexOf(task);
-    _list[taskIndex].toggleCompleted();
-    notifyListeners();
+  void setCheckbox(Task task, bool done) async {
+    task.completed = done;
+    await API.updateTodos(task, task.id);
+    await getTodos();
   }
 
   void setFilterBy(String filterBy) {
