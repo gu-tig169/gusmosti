@@ -21,7 +21,7 @@ class SecondView extends StatelessWidget {
                   height: 30,
                 ),
                 Container(
-                  width: 330.0,
+                  width: 345.0,
                   child: TextField(
                       decoration: InputDecoration(
                           hintText: 'What are you going to do?',
@@ -35,9 +35,9 @@ class SecondView extends StatelessWidget {
                     color: (Colors.white),
                     child: Text('+ Add'),
                     onPressed: () {
-                      var task = Task(title: controller.text);
+                      var addToList = Task(title: controller.text);
                       Provider.of<MyState>(context, listen: false)
-                          .addItem(task);
+                          .addItem(addToList);
                       Navigator.pop(context);
                     }),
               ],
